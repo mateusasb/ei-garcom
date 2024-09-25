@@ -1,20 +1,16 @@
-import  React, { useState } from 'react';
-import { Link, useSearchParams, useLocation, Routes, Route } from 'react-router-dom';
+import  React from 'react';
+import { Link, useSearchParams, Routes, Route } from 'react-router-dom';
 import WaiterPublicPage from './pages/waiter-public/WaiterPublicPage';
 import WaiterPrivatePage from './pages/waiter-private/WaiterPrivatePage';
 import Home from './pages/Home.js'
 import MainLayout from './layouts/MainLayout.js';
 import NotFound from './pages/NotFound.js'
-import waiterList from './services/waiterList.json'
 import "./styles/global.css"
 
 function App() {
   const [searchParams, setSearchParams] = useSearchParams({ n: 3 })
   const number = searchParams.get('n')
-  const location = useLocation()
-  console.log(location)
-
-
+  
   return (
     <>
       <MainLayout>
