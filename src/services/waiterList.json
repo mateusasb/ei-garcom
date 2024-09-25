@@ -1,54 +1,52 @@
-{
-    "users": [
-      {
-        "nome": "Carlos Oliveira",
-        "estabelecimento": "Bar do Zé",
-        "slug": "carlos-oliveira"
-      },
-      {
-        "nome": "Maria Souza",
-        "estabelecimento": "Restaurante Dona Maria",
-        "slug": "maria-souza"
-      },
-      {
-        "nome": "João Silva",
-        "estabelecimento": "Boteco do João",
-        "slug": "joao-silva"
-      },
-      {
-        "nome": "Ana Costa",
-        "estabelecimento": "Churrascaria Boi na Brasa",
-        "slug": "ana-costa"
-      },
-      {
-        "nome": "Pedro Lima",
-        "estabelecimento": "Lanchonete Central",
-        "slug": "pedro-lima"
-      },
-      {
-        "nome": "Juliana Alves",
-        "estabelecimento": "Café da Ju",
-        "slug": "juliana-alves"
-      },
-      {
-        "nome": "Fernando Ribeiro",
-        "estabelecimento": "Cantina do Fernando",
-        "slug": "fernando-ribeiro"
-      },
-      {
-        "nome": "Roberta Nogueira",
-        "estabelecimento": "Pizzaria da Roberta",
-        "slug": "roberta-nogueira"
-      },
-      {
-        "nome": "Ricardo Fernandes",
-        "estabelecimento": "Bar do Ricardo",
-        "slug": "ricardo-fernandes"
-      },
-      {
-        "nome": "Cláudia Martins",
-        "estabelecimento": "Bistrô da Cláudia",
-        "slug": "claudia-martins"
-      }
-    ]
-  }
+[
+    {
+    "nome": "Carlos Oliveira",
+    "estabelecimento": "Bar do Zé",
+    "slug": "carlos-oliveira"
+    },
+    {
+    "nome": "Maria Souza",
+    "estabelecimento": "Restaurante Dona Maria",
+    "slug": "maria-souza"
+    },
+    {
+    "nome": "João Silva",
+    "estabelecimento": "Boteco do João",
+    "slug": "joao-silva"
+    },
+    {
+    "nome": "Ana Costa",
+    "estabelecimento": "Churrascaria Boi na Brasa",
+    "slug": "ana-costa"
+    },
+    {
+    "nome": "Pedro Lima",
+    "estabelecimento": "Lanchonete Central",
+    "slug": "pedro-lima"
+    },
+    {
+    "nome": "Juliana Alves",
+    "estabelecimento": "Café da Ju",
+    "slug": "juliana-alves"
+    },
+    {
+    "nome": "Fernando Ribeiro",
+    "estabelecimento": "Cantina do Fernando",
+    "slug": "fernando-ribeiro"
+    },
+    {
+    "nome": "Roberta Nogueira",
+    "estabelecimento": "Pizzaria da Roberta",
+    "slug": "roberta-nogueira"
+    },
+    {
+    "nome": "Ricardo Fernandes",
+    "estabelecimento": "Bar do Ricardo",
+    "slug": "ricardo-fernandes"
+    },
+    {
+    "nome": "Cláudia Martins",
+    "estabelecimento": "Bistrô da Cláudia",
+    "slug": "claudia-martins"
+    }
+]
