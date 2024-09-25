@@ -21,6 +21,8 @@ const WaiterPublicPage = () => {
     }
   }, [waiterInfo, waiterSlug, navigate])
 
+  console.log(waiterId)
+
   if(waiterInfo) {
     return (
       <div>
