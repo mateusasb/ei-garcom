@@ -10,7 +10,7 @@ import "./styles/global.css"
 function App() {
   const [searchParams, setSearchParams] = useSearchParams({ n: 3 })
   const number = searchParams.get('n')
-  //
+  
   return (
     <>
       <MainLayout>
