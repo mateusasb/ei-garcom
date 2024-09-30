@@ -1,5 +1,5 @@
 import { db } from '../../firebase'
-import { getFirestore, collection, query, where, getDocs, getDoc } from "firebase/firestore";
+import { collection, query, where, getDocs } from "firebase/firestore";
 
 export const getUserBySlug = async (slug) => {
     try{
