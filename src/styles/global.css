@@ -1,3 +1,49 @@
-.active {
-    color: rgb(179, 0, 179);
+
+html, body {
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 400; /* Pode alterar conforme necessário */
+    font-style: normal;
+    font-optical-sizing: auto;
+    color: rgb(41, 41, 41);
+
+  }
+
+.app-global {
+    margin-bottom: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+h1 {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+
+button {
+    padding: 10px 20px;
+    border-radius: 25px;
+    border: none;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    width: 200px;
+  }
+
+button:hover {
+    opacity: 0.9;
+}
+
+footer {
+    margin: 20px;
+}
+
+.footer__signature {
+    font-size: small;
+}
+
+.footer__signature, .header__signature {
+    display: flex;
+    justify-content: center;
 }

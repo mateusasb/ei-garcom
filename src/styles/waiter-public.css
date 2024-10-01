@@ -1,0 +1,61 @@
+.waiter-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.waiter-avatar {
+    background-color: #e4d8fc;
+    border-radius: 50%;
+    width: 150px;
+    height: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+
+.waiter-name {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 0px;
+}
+
+.waiter-location {
+    font-size: 1rem;
+    margin-top: 15px;
+    display: flex;
+    color: #6c6c6c;
+}
+
+.action-buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+
+.btn-call-waiter {
+    background-color: #6750a4;
+    color: #fff;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.btn-call-waiter:disabled {
+    background-color: #908e96;
+    color: #fff;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.btn-toggle-service {
+    background-color: #3b8d5d;
+    color: #fff;
+    transition: background-color 0.5s ease, transform 0.3s ease;
+}
+
+.btn-toggle-service.end {
+    background-color: #9c2f53;
+    color: #fff;
+    transition: background-color 0.5s ease, transform 0.3s ease;
+}
