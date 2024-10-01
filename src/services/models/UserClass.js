@@ -11,6 +11,7 @@ class User {
         password = '',
         phone = '',
         slug = '',
+        profile_picture_url = 'https://via.placeholder.com/150',
         user_type = null
       } = userData || {};
   
@@ -24,6 +25,7 @@ class User {
       this.password = password;
       this.phone = phone;
       this.slug = slug;
+      this.profilePictureUrl = profile_picture_url;
       this.userType = user_type;
     }
   
