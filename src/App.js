@@ -1,15 +1,14 @@
-import  React from 'react';
+import  React, { useEffect, useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import WaiterPublicPage from './pages/waiter-public/WaiterPublicPage';
 import WaiterPrivatePage from './pages/waiter-private/WaiterPrivatePage';
-import Home from './pages/Home.js'
+import Home from './pages/Home.js';
 import Header from './layouts/GlobalHeader.js';
 import Footer from './layouts/GlobalFooter.js';
-import NotFound from './pages/NotFound.js'
-import "./styles/global.css"
+import NotFound from './pages/NotFound.js';
+import "./styles/global.css";
 
 function App() {
-  //const [searchParams, setSearchParams] = useSearchParams({ n: 3 })
   
   return (
     <>

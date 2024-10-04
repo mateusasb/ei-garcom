@@ -16,7 +16,8 @@ const WaiterPublicPage = () => {
         setTimeout(() => {
           navigate('/')
         })
-      }
+      } 
+
       return setWaiterInfo(userData);
     };
     
@@ -27,11 +28,6 @@ const WaiterPublicPage = () => {
   const waiter = new User(waiterInfo)
   return (
     <>
-      {waiter ? (
-        <></>
-      ) : (
-        <h1>Carregando...</h1>
-      )}
       {/* Componente do perfil do garçom na versão pública */}
       <WaiterPublicInterface 
         waiterData = {{
