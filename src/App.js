@@ -1,4 +1,4 @@
-import  React, { useEffect, useState } from 'react';
+import  React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import WaiterPublicPage from './pages/waiter-public/WaiterPublicPage';
 import WaiterPrivatePage from './pages/waiter-private/WaiterPrivatePage';
