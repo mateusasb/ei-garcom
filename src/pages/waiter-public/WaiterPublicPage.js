@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate} from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import WaiterPublicInterface from '../../components/waiter-public/WaiterPublicInterface';
 import { getUserBySlug } from '../../services/controller/userController';
 import User from '../../services/models/UserClass';
@@ -13,10 +13,9 @@ const WaiterPublicPage = () => {
     const fetchUser = async () => {
       const userData = await getUserBySlug(waiterSlug);
       if(!userData) {
-        setTimeout(() => {
-          navigate('/')
-        })
+        navigate('/')
       }
+      
       return setWaiterInfo(userData);
     };
     
@@ -27,11 +26,6 @@ const WaiterPublicPage = () => {
   const waiter = new User(waiterInfo)
   return (
     <>
-      {waiter ? (
-        <></>
-      ) : (
-        <h1>Carregando...</h1>
-      )}
       {/* Componente do perfil do garçom na versão pública */}
       <WaiterPublicInterface 
         waiterData = {{

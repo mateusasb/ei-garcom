@@ -23,7 +23,7 @@ function WaiterPublicInfo(waiterData) {
             />
 
             <h3 className="waiter-name">
-                Seu Garçom: <stro className="waiter-name__name">{waiterInfo ? waiterInfo.waiter_first_name + ' ' + waiterInfo.waiter_last_name : ''}</stro>
+                Seu Garçom: {waiterInfo ? waiterInfo.waiter_first_name + ' ' + waiterInfo.waiter_last_name : ''}
             </h3>
 
             <p className="waiter-location">

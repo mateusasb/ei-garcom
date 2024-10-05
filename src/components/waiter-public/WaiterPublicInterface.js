@@ -13,11 +13,11 @@ const WaiterPublicInterface = (waiter) => {
       {/* Botões para interação do cliente */}
       <div className="action-buttons">
         <>
-          <ToggleCallWaiter />
+          <ToggleCallWaiter/>
         </>
         
         <>
-          <ToggleService />
+          <ToggleService/>
         </>  
       </div>
     </>
