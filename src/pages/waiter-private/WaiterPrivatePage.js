@@ -13,9 +13,7 @@ const WaiterPrivatePage = () => {
     const fetchUser = async () => {
       const userData = await getUserBySlug(waiterSlug);
       if(!userData) {
-        setTimeout(() => {
-          navigate('/')
-        })
+        navigate('/')
       }
       return setWaiterInfo(userData);
     };

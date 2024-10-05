@@ -1,6 +1,9 @@
 import React from 'react';
+import { socket } from '../../socket'
 
 const ManagementPanel = () => {
+  console.log(socket);
+
   return (
     <div>
       <h2>Painel de Gerenciamento</h2>

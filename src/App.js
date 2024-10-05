@@ -6,12 +6,13 @@ import Home from './pages/Home.js';
 import Header from './layouts/GlobalHeader.js';
 import Footer from './layouts/GlobalFooter.js';
 import NotFound from './pages/NotFound.js';
+import { AppProvider } from './components/AppProvider.js';
 import "./styles/global.css";
 
 function App() {
   
   return (
-    <>
+    <AppProvider>
       <div>
         <Header/>
       </div>
@@ -41,7 +42,7 @@ function App() {
       <div>
         <Footer/>
       </div>
-    </>
+    </AppProvider>
   );
 }
 
