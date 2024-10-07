@@ -8,12 +8,12 @@ function ToggleCallWaiter() {
     useEffect(() => {
         socket.on('connect', () => {
             setSessionStart(true)
-            console.log(socket)
+            //console.log(socket)
         })
 
         socket.on('disconnect', () => {
             setSessionStart(false)
-            console.log(socket)
+            //console.log(socket)
         })
 
     }, [])

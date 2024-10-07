@@ -6,7 +6,6 @@ import { socket } from '../../socket'
 function ToggleService() {
     const { waiterSlug } = useParams();
     const [serviceStart, setServiceStart] = useState(false);
-    console.log(waiterSlug);
 
     useEffect(() => {
         if (serviceStart) {
@@ -14,11 +13,33 @@ function ToggleService() {
         } else {
             socket.disconnect()
         }
+
+        return () => {
+            socket.disconnect();
+        };
         
     }, [serviceStart]);
 
+    useEffect(() => {
+        socket.on('connect', () => {
+            if(socket.id) {
+                socket.emit('new-service-request-customer', waiterSlug, {name: 'Mateus', socket_id: socket.id});
+            }
+        })
+
+        socket.on('service-start-customer', (waiterId) => {
+            socket.emit('customer-initiate-session', waiterId);
+        })
+
+        return () => {
+            socket.off('connect');
+            socket.off('disconnect');
+            socket.off('service-start-customer');
+          };
+
+    }, [waiterSlug])
+
     function serviceChange() {
-        socket.emit('new-service-request', ('novo pedido de atendimento'))
         setServiceStart(!serviceStart);
     };
 
