@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from "react-router-dom";
 import WaiterPublicInterface from '../../components/waiter-public/WaiterPublicInterface';
 import { getUserBySlug } from '../../services/controller/userController';
+import { saveVisitorId } from '../../services/controller/visitorController';
 import User from '../../services/models/UserClass';
 
 const WaiterPublicPage = () => {
@@ -16,6 +17,7 @@ const WaiterPublicPage = () => {
         navigate('/')
       }
       
+      saveVisitorId()
       return setWaiterInfo(userData);
     };
     

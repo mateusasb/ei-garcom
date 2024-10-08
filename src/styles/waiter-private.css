@@ -1,0 +1,50 @@
+ul {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding-inline-start: 0px;
+    width: 90%;
+}
+
+.waiter-management-panel {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.waiter-action-buttons {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+#btn-yes {
+    width: 100px;
+    color: white;
+    background-color: #638c74;
+}
+
+
+#btn-no {
+    width: 100px;
+    color: white;
+    background-color: #9f6d6d;
+}
+
+#btn-end-service {
+    width: 200px;
+    color: white;
+    background-color: #9f6d6d;
+}
+
+#btn-change-table {
+    width: 200px;
+    color: white;
+    background-color: #a1a1a1;;
+}

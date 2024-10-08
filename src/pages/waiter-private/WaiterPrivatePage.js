@@ -27,7 +27,7 @@ const WaiterPrivatePage = () => {
   return (
     <>
       {waiter ? (
-        <h1>Página Privada - {waiter.firstName}</h1>
+        <h1>{`${waiter.firstName} ${waiter.lastName}`}</h1>
       ) : (
         <h1>Carregando...</h1>
       )}
