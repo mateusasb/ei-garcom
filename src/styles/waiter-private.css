@@ -1,0 +1,65 @@
+
+
+.waiter-management-panel {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.service-request-cards {
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+    padding: 14px; 
+    margin: 15px 0; 
+    border: 1px solid #ddd;
+    transition: transform 0.2s, box-shadow 0.2s;
+    list-style: none;
+    width: 85%;
+}
+
+.service-active-cards {
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+    padding: 14px; 
+    margin: 15px 0; 
+    border: 1px solid #ddd;
+    transition: transform 0.2s, box-shadow 0.2s;
+    list-style: none;
+    width: 85%;
+}
+
+.waiter-action-buttons {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+#btn-yes {
+    width: 100px;
+    color: white;
+    background-color: #638c74;
+}
+
+
+#btn-no {
+    width: 100px;
+    color: white;
+    background-color: #9f6d6d;
+}
+
+#btn-end-service {
+    width: 200px;
+    color: white;
+    background-color: #9f6d6d;
+}
+
+#btn-change-table {
+    width: 200px;
+    color: white;
+    background-color: #a1a1a1;;
+}
