@@ -6,7 +6,7 @@ import '../../styles/waiter-private.css'
 const ManagementPanel = () => {
   const { waiterSlug } = useParams();
   const [sessionStart, setSessionStart] = useState()
-  const [newServiceRequest, setNewServiceRequest] = useState();
+  const [serviceRequests, setServiceRequests] = useState([]);
 
   useLayoutEffect(() => {
     setSessionStart(true)
@@ -24,7 +24,15 @@ const ManagementPanel = () => {
     });
 
     socket.on('new-service-request-waiter', (customerInfo) => {
-      setNewServiceRequest(customerInfo)
+      setServiceRequests((prevRequests) => {
+        const alreadyExists = prevRequests.some(request => request.visitor_id === customerInfo.visitor_id);
+
+        if(!alreadyExists) {
+          return [...prevRequests, customerInfo];
+        }
+
+        return prevRequests;
+      })
     });
 
     return () => {
@@ -35,33 +43,40 @@ const ManagementPanel = () => {
 
   }, [waiterSlug])
 
-  function handleAcceptService() {
-    setNewServiceRequest(null);
-    console.log(newServiceRequest);
-    socket.emit('service-start-waiter', waiterSlug, newServiceRequest.socket_id)
+  function handleAcceptService(requestId, socketId) {
+    setServiceRequests((prevRequests) => prevRequests.filter((req) => req.id !== requestId));
+    socket.emit('service-start-waiter', waiterSlug, socketId)
     console.log('Atendimento Aceito')
   };
 
-  function handleRejectService() {
-    setNewServiceRequest(null);
+  function handleRejectService(requestId) {
+    setServiceRequests((prevRequests) => prevRequests.filter((req) => req.visitor_id !== requestId));
     console.log('Atendimento Recusado')
   };
 
   return (
     <div className="waiter-management-panel">
       
-      {/* Card de novo atendimento */}
-      {newServiceRequest && (
-        <ul className="service-request-cards">
-          <li id='card'>
+      {/* Lista de cards de novos atendimentos */}
+      {serviceRequests.length === 0 ? (
+        <div></div>
+      ) : (
+      <ul className="service-request-cards">
+        {serviceRequests.map((request) => (
+          <li key={request.visitor_id} id="card">
+            
             <h3>Nova Solicitação</h3>
-            <p>Um cliente deseja iniciar um atendimento com você. Aceitar?</p>
-            <div className='waiter-action-buttons'>
-              <button onClick={handleAcceptService} id='btn-yes'>Sim</button>
-              <button onClick={handleRejectService} id='btn-no'>Não</button>
+            <p>{request.name} deseja iniciar um atendimento com você. Aceitar?</p>
+            
+            <div className="waiter-action-buttons">
+              
+              <button onClick={() => handleAcceptService(request.visitor_id, request.socket_id)} id="btn-yes">Sim</button>
+              <button onClick={() => handleRejectService(request.visitor_id)} id="btn-no">Não</button>
+            
             </div>
           </li>
-        </ul>
+        ))}
+      </ul>
       )}
 
       <h2>Painel de Gerenciamento</h2>

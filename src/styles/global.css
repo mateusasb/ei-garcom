@@ -60,5 +60,12 @@ footer {
 }
 
 #card {
-    margin: 5px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+    padding: 14px; 
+    margin: 10px 0px 10px 0px; 
+    border: 1px solid #ddd;
+    transition: transform 0.2s, box-shadow 0.2s;
+    list-style: none;
+    width: 85%; 
 }

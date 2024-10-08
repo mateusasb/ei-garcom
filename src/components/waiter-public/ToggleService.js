@@ -2,6 +2,7 @@ import '../../styles/waiter-public.css'
 import { useParams } from "react-router-dom";
 import React, { useEffect, useState } from 'react';
 import { socket } from '../../socket'
+import { getVisitorId } from '../../services/controller/visitorController';
 
 function ToggleService() {
     const { waiterSlug } = useParams();
@@ -23,7 +24,7 @@ function ToggleService() {
     useEffect(() => {
         socket.on('connect', () => {
             if(socket.id) {
-                socket.emit('new-service-request-customer', waiterSlug, {name: 'Mateus', socket_id: socket.id});
+                socket.emit('new-service-request-customer', waiterSlug, {name: 'Mateus', socket_id: socket.id, visitor_id: getVisitorId()});
             }
         })
 

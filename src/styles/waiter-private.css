@@ -1,4 +1,11 @@
-
+ul {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding-inline-start: 0px;
+    width: 90%;
+}
 
 .waiter-management-panel {
     display: flex;
@@ -6,28 +13,6 @@
     justify-content: center;
     align-items: center;
     margin-bottom: 30px;
-}
-
-.service-request-cards {
-    border-radius: 12px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
-    padding: 14px; 
-    margin: 15px 0; 
-    border: 1px solid #ddd;
-    transition: transform 0.2s, box-shadow 0.2s;
-    list-style: none;
-    width: 85%;
-}
-
-.service-active-cards {
-    border-radius: 12px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
-    padding: 14px; 
-    margin: 15px 0; 
-    border: 1px solid #ddd;
-    transition: transform 0.2s, box-shadow 0.2s;
-    list-style: none;
-    width: 85%;
 }
 
 .waiter-action-buttons {
