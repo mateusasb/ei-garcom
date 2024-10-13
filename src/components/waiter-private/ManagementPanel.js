@@ -1,12 +1,13 @@
 import React, { useState, useLayoutEffect, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { socket } from '../../socket'
+import { saveServiceRequests, removeServiceRequests, getCurrentRequests } from '../../services/controller/servicesController';
 import '../../styles/waiter-private.css'
 
 const ManagementPanel = () => {
   const { waiterSlug } = useParams();
-  const [sessionStart, setSessionStart] = useState()
-  const [serviceRequests, setServiceRequests] = useState([]);
+  const [sessionStart, setSessionStart] = useState();
+  const [requests, setRequests] = useState([]);
 
   useLayoutEffect(() => {
     setSessionStart(true)
@@ -15,8 +16,10 @@ const ManagementPanel = () => {
   }, [sessionStart])
 
   useEffect(() => {
+    setRequests(getCurrentRequests());
+
     socket.on('connect', () => {
-        socket.emit('waiter-initiate-session', waiterSlug)
+      socket.emit('waiter-initiate-session', waiterSlug)
     });
 
     socket.on('customer-call', () => {
@@ -24,21 +27,13 @@ const ManagementPanel = () => {
     })
 
     socket.on('new-service-request-waiter', (customerInfo) => {
-      setServiceRequests((prevRequests) => {
-        const alreadyExists = prevRequests.findIndex((req) => req.visitor_id  === customerInfo.visitor_id)
-
-        if(alreadyExists === -1) {
-          return [...prevRequests, customerInfo];
-        } else {
-          prevRequests[alreadyExists].socket_id = customerInfo.socket_id
-          return prevRequests;
-        }
-      })
-
+      saveServiceRequests(requests, customerInfo)
+      setRequests(getCurrentRequests());
     });
 
-    socket.on('service-request-expired-waiter', (customerSocket) => {
-      setServiceRequests((prevRequests) => prevRequests.filter((req) => req.socket_id !== customerSocket));
+    socket.on('service-request-expired-waiter', (visitorId) => {
+      removeServiceRequests(requests, visitorId)
+      setRequests(getCurrentRequests());
     })
 
     return () => {
@@ -50,13 +45,15 @@ const ManagementPanel = () => {
 
   }, [waiterSlug])
 
-  function handleAcceptService(requestId, socketId) {
-    setServiceRequests((prevRequests) => prevRequests.filter((req) => req.visitor_id !== requestId));
+  function handleAcceptService(visitorId, socketId) {
+    const updatedRequests = removeServiceRequests(requests, visitorId);
+    setRequests(updatedRequests);
     socket.emit('service-start-waiter', waiterSlug, socketId)
   };
 
-  function handleRejectService(requestId, socketId) {
-    setServiceRequests((prevRequests) => prevRequests.filter((req) => req.visitor_id !== requestId));
+  function handleRejectService(visitorId, socketId) {
+    const updatedRequests = removeServiceRequests(requests, visitorId);
+    setRequests(updatedRequests);
     socket.emit('service-refused-waiter', socketId)
   };
 
@@ -64,11 +61,11 @@ const ManagementPanel = () => {
     <div className="waiter-management-panel">
       
       {/* Lista de cards de novos atendimentos */}
-      {serviceRequests.length === 0 ? (
+      {requests && requests.length === 0 ? (
         <div></div>
       ) : (
       <ul className="service-request-cards">
-        {serviceRequests.map((request) => (
+        {requests && requests.map((request) => (
           <li key={request.visitor_id} id="card">
             
             <h3>Nova Solicitação</h3>

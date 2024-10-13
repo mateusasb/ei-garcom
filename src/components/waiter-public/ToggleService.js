@@ -6,7 +6,7 @@ import { getVisitorId } from '../../services/controller/visitorController';
 
 function ToggleService() {
     const { waiterSlug } = useParams();
-    const [serviceStatus, setServiceStatus] = useState('');
+    const [serviceStatus, setServiceStatus] = useState('idle');
 
     useEffect(() => {
         socket.on('connect', () => {
@@ -23,7 +23,7 @@ function ToggleService() {
         })
 
         socket.on('service-refused-customer', () => {
-            setServiceStatus('');
+            setServiceStatus('idle');
             socket.disconnect();
         })
 
@@ -36,7 +36,6 @@ function ToggleService() {
     }, [waiterSlug])
 
     useEffect(() => {
-        console.log(serviceStatus)
         if (serviceStatus !== 'requested') {
             return;
         }
@@ -44,9 +43,9 @@ function ToggleService() {
         const currentStatus = serviceStatus;
         const timeoutId = setTimeout(() => {
             if (currentStatus === 'requested') {
-                socket.emit('service-request-expired-customer', waiterSlug);
+                socket.emit('service-request-expired-customer', waiterSlug, getVisitorId());
                 socket.disconnect();
-                setServiceStatus('');
+                setServiceStatus('idle');
             }
         }, 6000);
     
@@ -56,9 +55,9 @@ function ToggleService() {
     
     }, [serviceStatus, waiterSlug]);
 
-    function serviceChange() {
+    function serviceToggle() {
         if (serviceStatus === 'initiated') {
-            setServiceStatus('');
+            setServiceStatus('idle');
             socket.disconnect();
         } else {
             socket.connect();
@@ -79,11 +78,11 @@ function ToggleService() {
             </button>
 
             <button 
-                onClick={serviceChange} 
+                onClick={serviceToggle} 
                 className= {`btn-toggle-service ${serviceStatus}`}
                 disabled = {serviceStatus === 'requested'}
                 >
-                {serviceStatus === '' || serviceStatus === 'requested' ? 'Iniciar Atendimento' : 'Encerrar Atendimento'}
+                {serviceStatus === 'idle' || serviceStatus === 'requested' ? 'Iniciar Atendimento' : 'Encerrar Atendimento'}
             </button>
         </>
     )

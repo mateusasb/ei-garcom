@@ -38,8 +38,8 @@ io.on("connection", (socket) => {
         socket.to(customerSocket).emit('service-refused-customer')
     });
 
-    socket.on('service-request-expired-customer', (waiterId) => {
-        socket.to(waiterId).emit('service-request-expired-waiter', socket.id)
+    socket.on('service-request-expired-customer', (waiterId, visitorId) => {
+        socket.to(waiterId).emit('service-request-expired-waiter', visitorId)
     })
 
 });
