@@ -17,6 +17,10 @@ io.on("connection", (socket) => {
     socket.on('customer-initiate-session', (waiterId) => {
         socket.join(waiterId)
     });
+
+    socket.on('customer-call', (waiterId) => {
+        socket.to(waiterId).emit('customer-call')
+    })
     
     socket.on('new-service-request-customer', (waiterId, customerInfo) => {
         if(roomExists(waiterId)) {

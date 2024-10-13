@@ -1,26 +1,21 @@
 import '../../styles/waiter-public.css'
 import { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom';
 import { socket } from '../../socket'
 
 function ToggleCallWaiter() {
+    const { waiterSlug } = useParams();
     const [sessionStart, setSessionStart] = useState()
 
     useEffect(() => {
-        socket.on('connect', () => {
+        socket.on('service-start-customer', () => {
             setSessionStart(true)
-            //console.log(socket)
-        })
-
-        socket.on('disconnect', () => {
-            setSessionStart(false)
-            //console.log(socket)
         })
 
     }, [])
 
-    
     function callWaiter() {
-        console.log('Chamando Garçom')
+        socket.emit('customer-call', waiterSlug); 
     }
 
     return (

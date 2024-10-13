@@ -19,9 +19,9 @@ const ManagementPanel = () => {
         socket.emit('waiter-initiate-session', waiterSlug)
     });
 
-    socket.on('disconnect', () => {
-        setSessionStart(false)
-    });
+    socket.on('customer-call', () => {
+      alert('Cliente Chamando')
+    })
 
     socket.on('new-service-request-waiter', (customerInfo) => {
       setServiceRequests((prevRequests) => {
