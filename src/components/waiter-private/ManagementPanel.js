@@ -27,12 +27,12 @@ const ManagementPanel = () => {
     })
 
     socket.on('new-service-request-waiter', (customerInfo) => {
-      saveServiceRequests(requests, customerInfo)
+      saveServiceRequests(getCurrentRequests(), customerInfo)
       setRequests(getCurrentRequests());
     });
 
     socket.on('service-request-expired-waiter', (visitorId) => {
-      removeServiceRequests(requests, visitorId)
+      removeServiceRequests(getCurrentRequests(), visitorId)
       setRequests(getCurrentRequests());
     })
 

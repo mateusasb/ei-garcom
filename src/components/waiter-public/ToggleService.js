@@ -47,7 +47,7 @@ function ToggleService() {
                 socket.disconnect();
                 setServiceStatus('idle');
             }
-        }, 6000);
+        }, 60000);
     
         return () => {
             clearTimeout(timeoutId)
