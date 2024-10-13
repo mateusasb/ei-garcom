@@ -28,6 +28,10 @@ io.on("connection", (socket) => {
         socket.to(customerSocket).emit('service-start-customer', waiterId)
     });
 
+    socket.on('service-refused-waiter', (customerSocket) => {
+        socket.to(customerSocket).emit('service-refused-customer')
+    });
+
 });
 
 io.of("/").adapter.on("join-room", (room, id) => {

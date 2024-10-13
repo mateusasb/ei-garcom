@@ -44,14 +44,13 @@ const ManagementPanel = () => {
   }, [waiterSlug])
 
   function handleAcceptService(requestId, socketId) {
-    setServiceRequests((prevRequests) => prevRequests.filter((req) => req.id !== requestId));
+    setServiceRequests((prevRequests) => prevRequests.filter((req) => req.visitor_id !== requestId));
     socket.emit('service-start-waiter', waiterSlug, socketId)
-    console.log('Atendimento Aceito')
   };
 
-  function handleRejectService(requestId) {
+  function handleRejectService(requestId, socketId) {
     setServiceRequests((prevRequests) => prevRequests.filter((req) => req.visitor_id !== requestId));
-    console.log('Atendimento Recusado')
+    socket.emit('service-refused-waiter', socketId)
   };
 
   return (
@@ -71,7 +70,7 @@ const ManagementPanel = () => {
             <div className="waiter-action-buttons">
               
               <button onClick={() => handleAcceptService(request.visitor_id, request.socket_id)} id="btn-yes">Sim</button>
-              <button onClick={() => handleRejectService(request.visitor_id)} id="btn-no">Não</button>
+              <button onClick={() => handleRejectService(request.visitor_id, request.socket_id)} id="btn-no">Não</button>
             
             </div>
           </li>
