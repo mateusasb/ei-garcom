@@ -11,46 +11,81 @@ function ToggleService() {
     useEffect(() => {
         socket.on('connect', () => {
             if(socket.id) {
-                socket.emit('new-service-request-customer', waiterSlug, {name: 'Mateus', socket_id: socket.id, visitor_id: getVisitorId()});
                 setServiceStatus('requested');
+                socket.emit('new-service-request-customer', waiterSlug, {name: 'Mateus', socket_id: socket.id, visitor_id: getVisitorId()});
             }
         })
 
         socket.on('service-start-customer', (waiterId) => {
-            socket.emit('customer-initiate-session', waiterId);
             setServiceStatus('initiated');
+            socket.emit('customer-initiate-session', waiterId);
+            
         })
 
         socket.on('service-refused-customer', () => {
-            socket.disconnect();
             setServiceStatus('');
+            socket.disconnect();
         })
 
         return () => {
             socket.off('connect');
             socket.off('service-start-customer');
-            socket.off('service-refused-waiter');
+            socket.off('service-refused-customer');
           };
 
     }, [waiterSlug])
 
+    useEffect(() => {
+        console.log(serviceStatus)
+        if (serviceStatus !== 'requested') {
+            return;
+        }
+    
+        const currentStatus = serviceStatus;
+        const timeoutId = setTimeout(() => {
+            if (currentStatus === 'requested') {
+                socket.emit('service-request-expired-customer', waiterSlug);
+                socket.disconnect();
+                setServiceStatus('');
+            }
+        }, 6000);
+    
+        return () => {
+            clearTimeout(timeoutId)
+        };
+    
+    }, [serviceStatus, waiterSlug]);
+
     function serviceChange() {
         if (serviceStatus === 'initiated') {
-            socket.disconnect();
             setServiceStatus('');
+            socket.disconnect();
         } else {
             socket.connect();
         }
-    }
+    };
+
+    function callWaiter() {
+        socket.emit('customer-call', waiterSlug);
+    };
 
     return (
-        <button 
-            onClick={serviceChange} 
-            className= {`btn-toggle-service ${serviceStatus}`}
-            disabled = {serviceStatus === 'requested'}
-            >
-            {serviceStatus === '' || serviceStatus === 'requested' ? 'Iniciar Atendimento' : 'Encerrar Atendimento'}
-        </button>
+        <>
+            <button
+                onClick={callWaiter}
+                className='btn-call-waiter'
+                disabled = {serviceStatus !== 'initiated'}
+            > Chamar Garçom
+            </button>
+
+            <button 
+                onClick={serviceChange} 
+                className= {`btn-toggle-service ${serviceStatus}`}
+                disabled = {serviceStatus === 'requested'}
+                >
+                {serviceStatus === '' || serviceStatus === 'requested' ? 'Iniciar Atendimento' : 'Encerrar Atendimento'}
+            </button>
+        </>
     )
 }
 

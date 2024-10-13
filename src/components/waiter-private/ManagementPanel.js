@@ -25,20 +25,27 @@ const ManagementPanel = () => {
 
     socket.on('new-service-request-waiter', (customerInfo) => {
       setServiceRequests((prevRequests) => {
-        const alreadyExists = prevRequests.some(request => request.visitor_id === customerInfo.visitor_id);
+        const alreadyExists = prevRequests.findIndex((req) => req.visitor_id  === customerInfo.visitor_id)
 
-        if(!alreadyExists) {
+        if(alreadyExists === -1) {
           return [...prevRequests, customerInfo];
+        } else {
+          prevRequests[alreadyExists].socket_id = customerInfo.socket_id
+          return prevRequests;
         }
-
-        return prevRequests;
       })
+
     });
+
+    socket.on('service-request-expired-waiter', (customerSocket) => {
+      setServiceRequests((prevRequests) => prevRequests.filter((req) => req.socket_id !== customerSocket));
+    })
 
     return () => {
       socket.off('connect');
-      socket.off('disconnect');
-      socket.off('new-service-request');
+      socket.off('customer-call');
+      socket.off('new-service-request-waiter');
+      socket.off('service-request-expired-waiter');
     };
 
   }, [waiterSlug])
