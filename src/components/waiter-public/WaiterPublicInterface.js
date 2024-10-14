@@ -1,6 +1,5 @@
 import React from 'react';
 import ToggleService from './ToggleService';
-import ToggleCallWaiter from './ToggleCallWaiter';
 import WaiterPublicInfo from './WaiterPublicInfo';
 import '../../styles/waiter-public.css'
 
@@ -12,9 +11,6 @@ const WaiterPublicInterface = (waiter) => {
 
       {/* Botões para interação do cliente */}
       <div className="action-buttons">
-        <>
-          <ToggleCallWaiter/>
-        </>
         
         <>
           <ToggleService/>

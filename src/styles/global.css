@@ -12,17 +12,28 @@ html, body {
     margin-bottom: 40px;
     display: flex;
     flex-direction: column;
+    flex-wrap: wrap;
     align-items: center;
 }
 
 h1 {
     font-size: 2rem;
     font-weight: bold;
-    margin-bottom: 20px;
+    margin: 20px;
   }
 
+h3 {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+p {
+    margin-top: 5px;
+    margin-bottom: 25px;
+}
+
 button {
-    padding: 10px 20px;
+    padding: 8px 12px;
     border-radius: 25px;
     border: none;
     font-size: 1rem;
@@ -32,7 +43,7 @@ button {
   }
 
 button:hover {
-    opacity: 0.9;
+    opacity: 0.8;
 }
 
 footer {
@@ -46,4 +57,15 @@ footer {
 .footer__signature, .header__signature {
     display: flex;
     justify-content: center;
+}
+
+#card {
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+    padding: 14px; 
+    margin: 10px 0px 10px 0px; 
+    border: 1px solid #ddd;
+    transition: transform 0.2s, box-shadow 0.2s;
+    list-style: none;
+    width: 85%; 
 }
