@@ -57,8 +57,9 @@ function ToggleService() {
 
     function serviceToggle() {
         if (serviceStatus === 'initiated') {
-            setServiceStatus('idle');
+            socket.emit('service-request-expired-customer', waiterSlug, getVisitorId());
             socket.disconnect();
+            setServiceStatus('idle');
         } else {
             socket.connect();
         }

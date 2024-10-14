@@ -5,7 +5,7 @@ export const getCurrentRequests = () => {
     }
 
     return JSON.parse(requestsArray)
-}
+};
 
 export function saveServiceRequests(prevRequests, currentRequest) {
     if (!Array.isArray(prevRequests)) {
@@ -19,13 +19,57 @@ export function saveServiceRequests(prevRequests, currentRequest) {
         prevRequests[reqAlreadyExists].socket_id = currentRequest.socket_id
         return setRequestsItem(prevRequests);
       }
-}
+};
 
-export function removeServiceRequests(prevRequests, visitorId) {
+export function removeServiceRequests(prevRequests, visitorId, setActive) {
     const updatedRequests = prevRequests.filter((req) => req.visitor_id !== visitorId)
+    const pendingRequest = prevRequests.filter((req) => req.visitor_id === visitorId)
+
+    if(setActive) {
+        saveActiveServices(pendingRequest[0])
+    } else {
+        removeActiveServices(visitorId)
+    }
+
     return setRequestsItem(updatedRequests)
-}
+};
 
 function setRequestsItem(requests) {
     return localStorage.setItem('currentServiceRequests', JSON.stringify(requests))
+};
+
+
+// 
+export const getActiveServices = () => {
+    const servicesArray = localStorage.getItem('activeServices');
+
+    if (!servicesArray) {
+        return [];
+    }
+    
+    return JSON.parse(servicesArray);
+};
+
+function saveActiveServices(newService) {
+    const activeServices = getActiveServices()
+
+    const serviceIndex = activeServices.findIndex(service => service.visitor_id === newService.visitor_id);
+    if (serviceIndex !== -1) {
+        activeServices[serviceIndex].socket_id = newService.socket_id;
+    } else {
+        activeServices.push(newService);
+    }
+
+    setActiveServices(activeServices);
+};
+
+function removeActiveServices(visitorId) {
+    const activeServices = getActiveServices()
+    const updatedServices = activeServices.filter((serv) => serv.visitor_id !== visitorId)
+
+    setActiveServices(updatedServices);
 }
+
+function setActiveServices(newService) {
+    return localStorage.setItem('activeServices', JSON.stringify(newService))
+};
