@@ -1,5 +1,5 @@
 export const getCurrentRequests = () => {
-    const requestsArray = localStorage.getItem('currentServiceRequests')
+    const requestsArray = localStorage.getItem('pendingServiceRequests')
     if(!requestsArray) {
         return []
     }
@@ -35,13 +35,13 @@ export function removeServiceRequests(prevRequests, visitorId, setActive) {
 };
 
 function setRequestsItem(requests) {
-    return localStorage.setItem('currentServiceRequests', JSON.stringify(requests))
+    return localStorage.setItem('pendingServiceRequests', JSON.stringify(requests))
 };
 
 
 // 
 export const getActiveServices = () => {
-    const servicesArray = localStorage.getItem('activeServices');
+    const servicesArray = localStorage.getItem('currentActiveServices');
 
     if (!servicesArray) {
         return [];
@@ -71,5 +71,5 @@ function removeActiveServices(visitorId) {
 }
 
 function setActiveServices(newService) {
-    return localStorage.setItem('activeServices', JSON.stringify(newService))
+    return localStorage.setItem('currentActiveServices', JSON.stringify(newService))
 };

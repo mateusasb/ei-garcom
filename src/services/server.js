@@ -18,6 +18,10 @@ io.on("connection", (socket) => {
         socket.join(waiterId)
     });
 
+    socket.on('customer-reconnected', (waiterId) => {
+        socket.join(waiterId)
+    })
+
     socket.on('customer-call', (waiterId) => {
         socket.to(waiterId).emit('customer-call')
     })

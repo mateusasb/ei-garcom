@@ -14,7 +14,7 @@ const ManagementPanel = () => {
     setSessionStart(true)
     socket.connect()
 
-    const savedServices = JSON.parse(localStorage.getItem('activeServices')) || [];
+    const savedServices = JSON.parse(localStorage.getItem('currentActiveServices')) || [];
     setServices(savedServices);
   }, [sessionStart])
 
