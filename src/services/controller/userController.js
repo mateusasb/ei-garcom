@@ -33,7 +33,7 @@ export const getUserByEmail = async (email) => {
             throw new Error("Usuário não encontrado");
         }
     } catch (error) {
-        console.error("Erro ao buscar usuário pelo slug:", error);
+        console.error("Erro ao buscar usuário pelo Email:", error);
         throw new Error("Erro ao buscar o usuário");
     }
 }

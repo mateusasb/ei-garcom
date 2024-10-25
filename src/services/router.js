@@ -6,6 +6,7 @@ import Home from '../pages/Home';
 import NotFound from '../pages/NotFound';
 import Login from '../pages/Login';
 import SignUp from '../pages/SignUp';
+import PermissionDenied from '../pages/waiter-public/PermissionDenied';
 
 const router = createBrowserRouter([
   {
@@ -21,7 +22,7 @@ const router = createBrowserRouter([
         element: <Login />,
       },
       {
-        path: '/signup',
+        path: '/cadastro',
         element: <SignUp />,
       },
       {
@@ -31,6 +32,10 @@ const router = createBrowserRouter([
       {
         path: '/g/:waiterSlug',
         element: <WaiterPrivatePage />,
+      },
+      {
+        path: '/sem-permissao',
+        element: <PermissionDenied />,
       },
       {
         path: '/not-found',

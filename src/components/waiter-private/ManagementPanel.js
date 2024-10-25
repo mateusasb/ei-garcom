@@ -1,7 +1,9 @@
 import React, { useState, useLayoutEffect, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { socket } from '../../socket'
 import { saveServiceRequests, removeServiceRequests, getCurrentRequests, getActiveServices } from '../../services/controller/servicesController';
+import { auth } from '../../firebase'
+import { onAuthStateChanged } from 'firebase/auth';
 import '../../styles/waiter-private.css'
 
 const ManagementPanel = () => {
@@ -9,14 +11,22 @@ const ManagementPanel = () => {
   const [sessionStart, setSessionStart] = useState();
   const [requests, setRequests] = useState([]);
   const [services, setServices] = useState([]);
+  const navigate = useNavigate()
 
   useLayoutEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        setSessionStart(false)
+        socket.disconnect()
+        navigate('/login')
+      }
+    });
+
     setSessionStart(true)
     socket.connect()
-
     const savedServices = JSON.parse(localStorage.getItem('currentActiveServices')) || [];
     setServices(savedServices);
-  }, [sessionStart])
+  }, [sessionStart, navigate])
 
   useEffect(() => {
     setRequests(getCurrentRequests());
@@ -63,8 +73,21 @@ const ManagementPanel = () => {
     socket.emit('service-refused-waiter', socketId)
   };
 
+  const handleLogout = async () => {
+    if(auth.currentUser) {
+      try {
+        await auth.signOut();
+        console.log("Usuário deslogado com sucesso!");
+      } catch(error) {
+        console.error('Erro ao deslogar', error)
+      }
+
+    };
+  };
+
   return (
     <div className="waiter-management-panel">
+      <button onClick={handleLogout}>Logout</button>
       
       {/* Lista de cards de novos atendimentos */}
       {requests && requests.length === 0 ? (

@@ -1,51 +1,50 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../firebase"; // Certifique-se de ajustar o caminho
-import { useNavigate } from "react-router-dom";
+import { auth } from "../firebase";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import { getUserByEmail } from "../services/controller/userController";
-import '../styles/login.css'
+import '../styles/login.css';
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState();
-  const [userInfo, setUserInfo] = useState(null);
-  const [error, setError] = useState(null)
+  const [error, setError] = useState(null);
+  const { setUserData } = useOutletContext();
   const navigate = useNavigate();
 
   async function redirectOnAuthSuccess() {
     setLoading(true);
     try {
-      const userData = await getUserByEmail(email);
-      if (!userData) {
-        setUserInfo(null)
+      const payload = await getUserByEmail(email);
+      if (!payload) {
         return null
 
       } else {
-        setUserInfo(userData);
+        setUserData(payload);
         setLoading(false);
-        navigate(`/g/${userData.slug}`)
+        navigate(`/g/${payload.slug}`);
       }
 
     } catch(err) {
-      console.error('Erro ao carregar os dados do garçom.');
+      console.error('Erro ao carregar os dados do garçom.', err);
     } finally {
       setLoading(false);
     }
   };
 
   const handleLogin = async (e) => {
+    setLoading(true);
     e.preventDefault();
     try {
       await signInWithEmailAndPassword(auth, email, password)
-      .then(async (userCredential) => {
-        //const user = userCredential.user;
-        //console.log("Usuário logado:", user);
+      .then(async () => {
         await redirectOnAuthSuccess()
       })
       
     } catch (err) {
       console.error(err)
+      setError(err)
     } finally {
       setLoading(false)
     }

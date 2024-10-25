@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import Header from './layouts/GlobalHeader';
 import Footer from './layouts/GlobalFooter';
@@ -6,6 +6,8 @@ import { AppProvider } from './components/AppProvider';
 import './styles/global.css';
 
 function App() {
+  const [userData, setUserData] = useState(null);
+
   return (
     <AppProvider>
       <div>
@@ -13,7 +15,7 @@ function App() {
       </div>
 
       <div className="app-global">
-        <Outlet /> {/* Renderiza as rotas aninhadas aqui */}
+        <Outlet context={{userData, setUserData}}/> {/* Renderiza as rotas aninhadas aqui */}
       </div>
 
       <div>
