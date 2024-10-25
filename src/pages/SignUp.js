@@ -1,29 +1,47 @@
 import React, { useEffect, useState } from "react";
 import { createUserWithEmailAndPassword, sendEmailVerification, onAuthStateChanged } from "firebase/auth";
 import { auth } from "../firebase"; 
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 
 const SignUp = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  //const [isVerified, setIsVerified] = useState(false);
+  const [polling, setPolling] = useState(false);
+  const { setUserData } = useOutletContext();
   const navigate = useNavigate();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        await user.reload();
-        if (user.auth && user.emailVerified) {
-          //setIsVerified(true);
-          navigate("/login");
-        }
+      if(user && !user.emailVerified) {
+        setPolling(true);
+        setUserData(user);
       }
     });
 
     return () => unsubscribe();
   }, [navigate]);
+
+  useEffect(() => {
+    const checkEmailVerification = async () => {
+      if(auth.currentUser) {
+        await auth.currentUser.reload();
+        if(auth.currentUser.emailVerified) {
+          setPolling(false);
+          navigate("/login");
+        }
+      }
+    };
+
+    if(polling) {
+      const intervalId = setInterval(() => {
+        checkEmailVerification();
+      }, 3000);
+
+      return () => clearInterval(intervalId); 
+    }
+  }, [polling, navigate]);
 
   const handleSignUp = async (e) => {
     e.preventDefault();
@@ -36,7 +54,6 @@ const SignUp = () => {
         sendEmailVerification(auth.currentUser)
       })
       //const user = userCredential.user;
-      console.log("Usuário registrado:", auth.currentUser);
     } catch (error) {
       setError(error.message);
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useLayoutEffect, useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase";
 import { useNavigate, useOutletContext } from "react-router-dom";
@@ -10,13 +10,21 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState();
   const [error, setError] = useState(null);
-  const { setUserData } = useOutletContext();
+  const { userData, setUserData } = useOutletContext();
   const navigate = useNavigate();
 
+  useLayoutEffect(() => {
+    if(userData && userData.auth) {
+      setLoading(true);
+      redirectOnAuthSuccess()
+    }
+
+  }, [])
+
   async function redirectOnAuthSuccess() {
-    setLoading(true);
+    
     try {
-      const payload = await getUserByEmail(email);
+      const payload = await getUserByEmail(email || userData.email);
       if (!payload) {
         return null
 
@@ -39,6 +47,7 @@ const Login = () => {
     try {
       await signInWithEmailAndPassword(auth, email, password)
       .then(async () => {
+        setLoading(true);
         await redirectOnAuthSuccess()
       })
       
