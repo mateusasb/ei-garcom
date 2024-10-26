@@ -1,59 +1,49 @@
 import React, { useEffect, useState } from "react";
 import { createUserWithEmailAndPassword, sendEmailVerification, onAuthStateChanged } from "firebase/auth";
 import { auth } from "../firebase"; 
-import { useNavigate, useOutletContext } from "react-router-dom";
+import { useOutletContext } from "react-router-dom";
+import { createNewUser } from "../services/controller/userController";
+import '../styles/authentication.css';
 
 const SignUp = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [polling, setPolling] = useState(false);
+  const [name, setName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [sentVerify, setSentVerify] = useState(false);
   const { setUserData } = useOutletContext();
-  const navigate = useNavigate();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if(user && !user.emailVerified) {
-        setPolling(true);
         setUserData(user);
       }
     });
 
     return () => unsubscribe();
-  }, [navigate]);
-
-  useEffect(() => {
-    const checkEmailVerification = async () => {
-      if(auth.currentUser) {
-        await auth.currentUser.reload();
-        if(auth.currentUser.emailVerified) {
-          setPolling(false);
-          navigate("/login");
-        }
-      }
-    };
-
-    if(polling) {
-      const intervalId = setInterval(() => {
-        checkEmailVerification();
-      }, 3000);
-
-      return () => clearInterval(intervalId); 
-    }
-  }, [polling, navigate]);
+  }, [setUserData]);
 
   const handleSignUp = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
-
+    
     try {
+      let signUpInfo = {email: email, name: name, lastName: lastName}
+      let actionCodeSettings = {
+        url: "http://localhost:3000/login",
+        handleCodeInApp: false
+      }
+
       await createUserWithEmailAndPassword(auth, email, password)
       .then(() => {
-        sendEmailVerification(auth.currentUser)
+        createNewUser(signUpInfo)
+        sendEmailVerification(auth.currentUser, actionCodeSettings)
+        setSentVerify(true)
       })
-      //const user = userCredential.user;
+      
     } catch (error) {
       setError(error.message);
 
@@ -64,12 +54,13 @@ const SignUp = () => {
 
   return (
     <div>
-      <form onSubmit={handleSignUp}>
+      <form className="auth-form-container" onSubmit={handleSignUp}>
         <fieldset>
           <legend>Cadastre-se</legend>
           <div>
             <label htmlFor="email">E-mail</label>
             <input
+              className="form-field"
               type="email"
               id="email"
               value={email}
@@ -81,6 +72,7 @@ const SignUp = () => {
           <div>
             <label htmlFor="email">Senha</label>
             <input
+              className="form-field"
               type="password"
               id="password"
               value={password}
@@ -90,11 +82,39 @@ const SignUp = () => {
           </div>
 
           <div>
-            {error && <p>{error}</p>}
+            <label htmlFor="email">Nome</label>
+            <input
+              className="form-field"
+              type="text"
+              id="email"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+            />
           </div>
 
           <div>
-            <button type="submit">Entrar</button>
+            <label htmlFor="email">Sobrenome</label>
+            <input
+              className="form-field"
+              type="text"
+              id="email"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+              required
+            />
+          </div>
+
+          <div className="message-container">
+            {error && <p id="error" style={{color: "red"}}>{error}</p>}
+          </div>
+          
+          <div className="message-container">
+            {sentVerify && <p id="info" style={{color: "orange"}}>Verifique o seu E-mail para continuar</p>}
+          </div>
+
+          <div>
+            <button type="submit">Cadastrar</button>
           </div>
         </fieldset>
       </form>

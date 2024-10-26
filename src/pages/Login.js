@@ -3,7 +3,7 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { getUserByEmail } from "../services/controller/userController";
-import '../styles/login.css';
+import '../styles/authentication.css';
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -15,14 +15,14 @@ const Login = () => {
 
   useLayoutEffect(() => {
     if(userData && userData.auth) {
+      console.log(userData)
       setLoading(true);
       redirectOnAuthSuccess()
     }
 
-  }, [])
+  }, [userData]) // eslint-disable-line
 
   async function redirectOnAuthSuccess() {
-    
     try {
       const payload = await getUserByEmail(email || userData.email);
       if (!payload) {
@@ -61,12 +61,13 @@ const Login = () => {
 
   return (
     <div>
-      <form onSubmit={handleLogin}>
+      <form className="auth-form-container" onSubmit={handleLogin}>
         <fieldset>
           <legend>Login</legend>
           <div>
             <label htmlFor="email">E-mail</label>
             <input
+              className="form-field"
               type="email"
               id="email"
               value={email}
@@ -78,6 +79,7 @@ const Login = () => {
           <div>
             <label htmlFor="email">Senha</label>
             <input
+              className="form-field"
               type="password"
               id="password"
               value={password}
