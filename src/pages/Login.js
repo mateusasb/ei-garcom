@@ -1,19 +1,27 @@
 import React, { useLayoutEffect, useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase";
-import { useNavigate, useOutletContext, Link } from "react-router-dom";
+import { useNavigate, useOutletContext, useLocation, Link } from "react-router-dom";
 import { getUserByEmail } from "../services/controller/userController";
 import '../styles/authentication.css';
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState();
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [redirectMode, setRedirectMode] = useState(null);
   const { userData, setUserData } = useOutletContext();
   const navigate = useNavigate();
+  let location = useLocation();
 
   useLayoutEffect(() => {
+    console.log(location)
+
+    if(location.state.mode) {
+      setRedirectMode(location.state.mode)
+    }
+
     if(userData && userData.auth) {
       console.log(userData)
       setLoading(true);
