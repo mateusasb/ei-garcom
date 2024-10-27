@@ -16,13 +16,13 @@ const SignUp = () => {
   const { setUserData } = useOutletContext();
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+    const checkAuthData = onAuthStateChanged(auth, async (user) => {
       if(user && !user.emailVerified) {
         setUserData(user);
       }
     });
 
-    return () => unsubscribe();
+    return () => checkAuthData();
   }, [setUserData]);
 
   const handleSignUp = async (e) => {
@@ -33,7 +33,7 @@ const SignUp = () => {
     try {
       let signUpInfo = {email: email, name: name, lastName: lastName}
       let actionCodeSettings = {
-        url: "http://localhost:3000/login",
+        url: "http://localhost:3000/auth",
         handleCodeInApp: false
       }
 
@@ -116,6 +116,7 @@ const SignUp = () => {
           <div>
             <button type="submit">Cadastrar</button>
           </div>
+          
         </fieldset>
       </form>
       

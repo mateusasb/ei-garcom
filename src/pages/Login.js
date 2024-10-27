@@ -1,7 +1,7 @@
 import React, { useLayoutEffect, useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase";
-import { useNavigate, useOutletContext } from "react-router-dom";
+import { useNavigate, useOutletContext, Link } from "react-router-dom";
 import { getUserByEmail } from "../services/controller/userController";
 import '../styles/authentication.css';
 
@@ -95,6 +95,11 @@ const Login = () => {
           <div>
             <button type="submit">Entrar</button>
           </div>
+
+          <div>
+            <Link to={'/esqueci-minha-senha'}>Esqueci a senha</Link>
+          </div>
+          
         </fieldset>
       </form>
       

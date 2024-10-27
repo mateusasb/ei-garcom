@@ -7,7 +7,8 @@ import NotFound from '../pages/NotFound';
 import Login from '../pages/Login';
 import SignUp from '../pages/SignUp';
 import PermissionDenied from '../pages/waiter-public/PermissionDenied';
-import VerifyEmail from '../pages/VerifyEmail';
+import VerifyEmail from '../pages/Authentication';
+import ForgotPassword from '../pages/ForgotPassword';
 
 const router = createBrowserRouter([
   {
@@ -27,8 +28,12 @@ const router = createBrowserRouter([
         element: <SignUp />,
       },
       {
-        path: '/verify',
+        path: '/auth',
         element: <VerifyEmail />,
+      },
+      {
+        path: '/esqueci-minha-senha',
+        element: <ForgotPassword />,
       },
       {
         path: '/p/:waiterSlug',

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react"
+import React, { useEffect, useLayoutEffect } from "react"
 import { auth } from "../firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import { useNavigate, useOutletContext } from "react-router-dom";
@@ -7,15 +7,20 @@ const VerifyEmail = () => {
     const { setUserData } = useOutletContext();
     const navigate = useNavigate();
 
+    useLayoutEffect(() => {
+        console.log(auth)
+    }, [])
+
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, async (user) => {
+        const checkAuthData = onAuthStateChanged(auth, async (user) => {
             if(user) {
                 setUserData(user)
+                console.log(user)
                 navigate('/login')
             }   
         })
 
-        return () => unsubscribe();
+        return () => checkAuthData();
 
     }, [setUserData, navigate])
 
