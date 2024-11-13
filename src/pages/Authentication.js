@@ -35,6 +35,7 @@ const VerifyEmail = () => {
                         .then(console.log('Código verificado com sucesso'))
                 } catch(err) {
                     setError('Link inválido ou expirado', err)
+                    console.error(error)
                 }
             }
 
@@ -43,7 +44,7 @@ const VerifyEmail = () => {
 
         verifyActionCode();
 
-    }, [location, oobAuthCode])
+    }, [location, oobAuthCode]) // eslint-disable-line
 
     useEffect(() => {
         console.log(4)
