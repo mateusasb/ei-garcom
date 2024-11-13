@@ -25,7 +25,7 @@ const ManagementPanel = () => {
     });
 
     return () => unsubscribe();
-  }, [auth]);
+  }, [auth]); // eslint-disable-line
 
   useLayoutEffect(() => {
     handleUserSessionStorage();
@@ -39,7 +39,7 @@ const ManagementPanel = () => {
       socket.disconnect();
       sessionStorage.removeItem('userData');
     };
-  }, []);
+  }, []); // eslint-disable-line
 
   useEffect(() => {
 
