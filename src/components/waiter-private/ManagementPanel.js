@@ -1,5 +1,5 @@
 import React, { useState, useLayoutEffect, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useOutletContext } from 'react-router-dom';
 import { socket } from '../../socket'
 import { saveServiceRequests, removeServiceRequests, getCurrentRequests, getActiveServices } from '../../services/controller/servicesController';
 import { auth } from '../../firebase'
@@ -7,32 +7,46 @@ import { onAuthStateChanged } from 'firebase/auth';
 import '../../styles/waiter-private.css'
 
 const ManagementPanel = () => {
-  const { waiterSlug } = useParams();
-  const [sessionStart, setSessionStart] = useState();
   const [requests, setRequests] = useState([]);
   const [services, setServices] = useState([]);
-  const navigate = useNavigate()
+  const [waiterInfo, setWaiterInfo] = useState(null);
+  const { waiterSlug } = useParams();
+  const { userData } = useOutletContext();
+  const navigate = useNavigate();
 
-  useLayoutEffect(() => {
-    onAuthStateChanged(auth, (user) => {
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (!user) {
-        setSessionStart(false)
-        socket.disconnect()
-        navigate('/login')
+        socket.disconnect();
+        navigate('/login');
+      } else {
+        socket.connect();
       }
     });
 
-    setSessionStart(true)
-    socket.connect()
-    const savedServices = JSON.parse(localStorage.getItem('currentActiveServices')) || [];
-    setServices(savedServices);
-  }, [sessionStart, navigate])
+    return () => unsubscribe();
+  }, [auth]);
+
+  useLayoutEffect(() => {
+    handleUserSessionStorage();
+
+    if (auth.currentUser) {
+      setServices(JSON.parse(localStorage.getItem('currentActiveServices')) || []);
+      sessionStorage.setItem('userData', JSON.stringify(userData));
+    }
+
+    return () => {
+      socket.disconnect();
+      sessionStorage.removeItem('userData');
+    };
+  }, []);
 
   useEffect(() => {
-    setRequests(getCurrentRequests());
 
     socket.on('connect', () => {
       socket.emit('waiter-initiate-session', waiterSlug)
+      setRequests(getCurrentRequests());
+      setServices(getActiveServices());
     });
 
     socket.on('customer-call', () => {
@@ -73,11 +87,21 @@ const ManagementPanel = () => {
     socket.emit('service-refused-waiter', socketId)
   };
 
+  function handleUserSessionStorage() {
+    let authUserData = sessionStorage ? JSON.parse(sessionStorage.getItem('userData')) : null;
+    if (!authUserData) {
+      sessionStorage.setItem('userData', JSON.stringify(userData));
+      authUserData = JSON.parse(sessionStorage.getItem('userData'));
+    }
+    
+    setWaiterInfo(authUserData);
+  }
+
   const handleLogout = async () => {
     if(auth.currentUser) {
       try {
-        await auth.signOut();
         console.log("Usuário deslogado com sucesso!");
+        await auth.signOut();
       } catch(error) {
         console.error('Erro ao deslogar', error)
       }
@@ -87,6 +111,8 @@ const ManagementPanel = () => {
 
   return (
     <div className="waiter-management-panel">
+      <h1>{waiterInfo && `${waiterInfo.first_name} ${waiterInfo.last_name}`}</h1>
+
       <button onClick={handleLogout}>Logout</button>
       
       {/* Lista de cards de novos atendimentos */}

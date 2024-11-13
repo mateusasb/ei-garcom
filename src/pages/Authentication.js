@@ -4,11 +4,12 @@ import { onAuthStateChanged, verifyPasswordResetCode } from "firebase/auth";
 import { useLocation, useNavigate, useOutletContext } from "react-router-dom";
 
 const VerifyEmail = () => {
+    const [error, setError] = useState(null);
+    const [redirectMode, setRedirectMode] = useState('default');
+    const [oobAuthCode, setOobAuthCode] = useState(null);
     const { setUserData } = useOutletContext();
     const navigate = useNavigate();
     const location = useLocation();
-    const [error, setError] = useState(null);
-    const [redirectMode, setRedirectMode] = useState('default');
 
     useLayoutEffect(() => {
         console.log(auth)
@@ -27,9 +28,10 @@ const VerifyEmail = () => {
             if(authMode === 'resetPassword') {
                 console.log(1)
                 setRedirectMode(authMode)
+                setOobAuthCode(oobCode)
                 try {
                     console.log(2)
-                    await verifyPasswordResetCode(auth, oobCode)
+                    await verifyPasswordResetCode(auth, oobAuthCode)
                         .then(console.log('Código verificado com sucesso'))
                 } catch(err) {
                     setError('Link inválido ou expirado', err)
@@ -41,7 +43,7 @@ const VerifyEmail = () => {
 
         verifyActionCode();
 
-    }, [location])
+    }, [location, oobAuthCode])
 
     useEffect(() => {
         console.log(4)
@@ -51,24 +53,24 @@ const VerifyEmail = () => {
                     await setUserData(user)
                     console.log(user)
                     setTimeout(() => {
-                        navigate('/login', { state: {mode: redirectMode} })
+                        navigate('/login', { state: {mode: redirectMode, oobCode: oobAuthCode} })
                     }, 3000)
 
                 } else {
                     console.log('Usuário não autenticado', auth)
                     setTimeout(() => {
-                        navigate('/', { state: {mode: redirectMode} })
+                        navigate('/', { state: {mode: redirectMode, oobCode: oobAuthCode} })
                     }, 3000)
                 }
             })
-
+            
         } else {
             setTimeout(() => {
-                navigate('/login', { state: {mode: redirectMode} })
+                navigate('/esqueci-minha-senha', { state: {mode: redirectMode, oobCode: oobAuthCode} })
             }, 3000)
         }
 
-    }, [redirectMode, setUserData, navigate])
+    }, [redirectMode, oobAuthCode, setUserData, navigate])
  
     return (
         <div>

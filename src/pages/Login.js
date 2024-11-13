@@ -1,7 +1,7 @@
 import React, { useLayoutEffect, useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase";
-import { useNavigate, useOutletContext, useLocation, Link } from "react-router-dom";
+import { useNavigate, useOutletContext, Link } from "react-router-dom";
 import { getUserByEmail } from "../services/controller/userController";
 import '../styles/authentication.css';
 
@@ -10,25 +10,20 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [redirectMode, setRedirectMode] = useState(null);
   const { userData, setUserData } = useOutletContext();
   const navigate = useNavigate();
-  let location = useLocation();
-
+  
   useLayoutEffect(() => {
-    console.log(location)
-
-    if(location.state.mode) {
-      setRedirectMode(location.state.mode)
-    }
-
-    if(userData && userData.auth) {
-      console.log(userData)
+    if(auth && auth.currentUser) {
       setLoading(true);
       redirectOnAuthSuccess()
     }
 
-  }, [userData]) // eslint-disable-line
+    return () => {
+      setLoading(false)
+    }
+
+  }, []) // eslint-disable-line
 
   async function redirectOnAuthSuccess() {
     try {
@@ -85,7 +80,7 @@ const Login = () => {
           </div>
 
           <div>
-            <label htmlFor="email">Senha</label>
+            <label htmlFor="password">Senha</label>
             <input
               className="form-field"
               type="password"

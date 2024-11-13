@@ -25,8 +25,7 @@ function ToggleService() {
                 setServiceStatus('requested');
                 socket.emit('new-service-request-customer', waiterSlug, {name: 'Mateus', socket_id: socket.id, visitor_id: getVisitorId()});
             }
-
-            localStorage.setItem('lastConnectedSession', socket.id)
+            
         })
 
         socket.on('service-start-customer', (waiterId) => {
