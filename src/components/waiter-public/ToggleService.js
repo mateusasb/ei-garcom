@@ -10,7 +10,13 @@ function ToggleService() {
 
     useLayoutEffect(() => {
         const lastConnectedSession = localStorage.getItem('lastConnectedSession')
-        if(lastConnectedSession !== null) {
+        const lastRequestedService = sessionStorage.getItem('serviceRequest')
+
+        if(lastRequestedService) {
+            socket.connect()
+        }
+
+        if(lastConnectedSession) {
             socket.connect()
             socket.emit('customer-reconnected', waiterSlug)
             setServiceStatus('initiated')
@@ -24,20 +30,27 @@ function ToggleService() {
             if(socket.id && lastConnectedSession === null) {
                 setServiceStatus('requested');
                 socket.emit('new-service-request-customer', waiterSlug, {name: 'Mateus', socket_id: socket.id, visitor_id: getVisitorId()});
+                sessionStorage.setItem('serviceRequest', socket.id)
             }
-            
-        })
+        });
+
+        socket.on('disconnect', (reason) => {
+            //console.log(reason)
+            //console.log(socket)
+            sessionStorage.removeItem('serviceRequest')
+        });
 
         socket.on('service-start-customer', (waiterId) => {
             setServiceStatus('initiated');
             socket.emit('customer-initiate-session', waiterId);
             localStorage.setItem('lastConnectedSession', socket.id);
-        })
+            sessionStorage.removeItem('serviceRequest');
+        });
 
         socket.on('service-refused-customer', () => {
             setServiceStatus('idle');
             socket.disconnect();
-        })
+        });
 
         return () => {
             socket.off('connect');
@@ -49,7 +62,7 @@ function ToggleService() {
 
     useEffect(() => {
         if (serviceStatus !== 'requested') {
-            return;
+            return
         }
     
         const currentStatus = serviceStatus;

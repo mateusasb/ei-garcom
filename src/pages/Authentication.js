@@ -20,7 +20,7 @@ const VerifyEmail = () => {
             let oobCode = query.get("oobCode")
             
             if(!oobCode) {
-                console.log('oobCode não encontrado ')
+                console.log('oobCode não encontrado')
                 setRedirectMode('default')
                 return
             }

@@ -20,8 +20,6 @@ io.on("connection", (socket) => {
 
     socket.on('customer-reconnected', (waiterId) => {
         socket.join(waiterId)
-        // adicionar evento comunicando ao waiter que cliente reconectou
-        // ao receber evento, waiter atualiza socketId no objeto do cliente conectado 
     })
 
     socket.on('customer-call', (waiterId) => {
