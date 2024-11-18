@@ -3,7 +3,7 @@
   max-width: 100%;
   padding: 20px;
   margin: 0 auto;
-  border-radius: 12px;
+  border-radius: 5px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   border: 1px solid #ddd;
   background-color: #ffffff;
@@ -27,7 +27,7 @@
 .auth-form-container .form-field {
   padding: 10px;
   font-size: 1em;
-  border-radius: 8px;
+  border-radius: 5px;
   border: 1px solid #ccc;
   transition: border-color 0.2s;
   width: 100%;
@@ -51,7 +51,7 @@
   padding: 10px;
   font-size: 1em;
   border: none;
-  border-radius: 8px;
+  border-radius: 5px;
   background-color: #333;
   color: #fff;
   cursor: pointer;
@@ -69,5 +69,13 @@
   margin-top: 10px;
   text-align: center;
 }
+
+.forgot-password {
+  margin: 12px;
+  display: grid;
+  justify-items: center;
+}
+
+
 
 

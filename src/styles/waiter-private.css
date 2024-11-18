@@ -7,6 +7,14 @@ ul {
     width: 90%;
 }
 
+.service-active-cards h3 {
+    margin-left: 8px;
+}
+
+.service-active-cards p {
+    margin: 10px 10px 30px 8px;
+}
+
 .waiter-management-panel {
     display: flex;
     flex-direction: column;
@@ -22,6 +30,7 @@ ul {
     align-items: center;
     justify-content: center;
     gap: 10px;
+    margin-bottom: 10px;
 }
 
 #btn-yes {
@@ -30,7 +39,6 @@ ul {
     background-color: #638c74;
 }
 
-
 #btn-no {
     width: 100px;
     color: white;
@@ -38,13 +46,51 @@ ul {
 }
 
 #btn-end-service {
-    width: 200px;
+    width: 225px;
+    height: 40px;
     color: white;
     background-color: #9f6d6d;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
 }
 
 #btn-change-table {
-    width: 200px;
+    width: 225px;
+    height: 40px;
     color: white;
-    background-color: #a1a1a1;;
+    background-color: #a1a1a1;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.waiter-manage-table-id form {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Espaçamento horizontal entre input e botão */
+    margin: 10px ; /* Espaçamento acima e abaixo do formulário */
+    width: auto;
+}
+
+.waiter-manage-table-id form input,
+.waiter-manage-table-id form button {
+    flex: auto; /* Faz com que input e botão ocupem a mesma largura */
+    height: 40px; /* Alinhamento de altura com o botão superior */
+}
+
+.waiter-manage-table-id form input {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 0 5px;
+    justify-items: center;
+}
+
+.waiter-manage-table-id form button {
+    background-color: #497841;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 8px;
+    cursor: pointer;
 }

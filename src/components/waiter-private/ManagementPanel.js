@@ -1,7 +1,7 @@
 import React, { useState, useLayoutEffect, useEffect } from 'react';
 import { useNavigate, useParams, useOutletContext } from 'react-router-dom';
 import { socket } from '../../socket'
-import { saveServiceRequests, removeServiceRequests, getCurrentRequests, getActiveServices } from '../../services/controller/servicesController';
+import { saveServiceRequests, removeServiceRequests, getCurrentRequests, getActiveServices, removeActiveServices, updateActiveService } from '../../services/controller/servicesController';
 import { auth } from '../../firebase'
 import { onAuthStateChanged } from 'firebase/auth';
 import '../../styles/waiter-private.css'
@@ -10,6 +10,8 @@ const ManagementPanel = () => {
   const [requests, setRequests] = useState([]);
   const [services, setServices] = useState([]);
   const [waiterInfo, setWaiterInfo] = useState(null);
+  const [changeTable, setChangeTable] = useState(false);
+  const [tableId, setTableId] = useState(0);
   const { waiterSlug } = useParams();
   const { userData } = useOutletContext();
   const navigate = useNavigate();
@@ -42,7 +44,6 @@ const ManagementPanel = () => {
   }, []); // eslint-disable-line
 
   useEffect(() => {
-
     socket.on('connect', () => {
       socket.emit('waiter-initiate-session', waiterSlug)
       setRequests(getCurrentRequests());
@@ -73,19 +74,25 @@ const ManagementPanel = () => {
 
   }, [waiterSlug])
 
-  function handleAcceptService(visitorId, socketId) {
+  function handleAcceptServiceRequest(visitorId, socketId) {
     const updatedRequests = removeServiceRequests(requests, visitorId, true);
     setRequests(updatedRequests);
     setServices(getActiveServices());
     socket.emit('service-start-waiter', waiterSlug, socketId)
   };
 
-  function handleRejectService(visitorId, socketId) {
+  function handleRejectServiceRequest(visitorId, socketId) {
     const updatedRequests = removeServiceRequests(requests, visitorId, false);
     setRequests(updatedRequests);
     setServices(getActiveServices());
-    socket.emit('service-refused-waiter', socketId)
+    socket.emit('service-refused-waiter', socketId);
   };
+
+  function handleEndActiveService(visitorId, socketId) {
+    removeActiveServices(visitorId);
+    setServices(getActiveServices());
+    socket.emit('service-refused-waiter', socketId);
+  }
 
   function handleUserSessionStorage() {
     let authUserData = sessionStorage ? JSON.parse(sessionStorage.getItem('userData')) : null;
@@ -95,6 +102,19 @@ const ManagementPanel = () => {
     }
     
     setWaiterInfo(authUserData);
+  }
+
+  function changeTableId(event, visitorId) {
+    event.preventDefault();
+
+    const currentService = services.find((serv) => serv.visitor_id = visitorId);
+    if(currentService) {
+      currentService.table_id = tableId;
+      updateActiveService(currentService);
+      setServices(getActiveServices());
+      setChangeTable(!changeTable);
+    }
+
   }
 
   const handleLogout = async () => {
@@ -128,8 +148,8 @@ const ManagementPanel = () => {
             
             <div className="waiter-action-buttons">
               
-              <button onClick={() => handleAcceptService(request.visitor_id, request.socket_id)} id="btn-yes">Sim</button>
-              <button onClick={() => handleRejectService(request.visitor_id, request.socket_id)} id="btn-no">Não</button>
+              <button onClick={() => handleAcceptServiceRequest(request.visitor_id, request.socket_id)} id="btn-yes">Sim</button>
+              <button onClick={() => handleRejectServiceRequest(request.visitor_id, request.socket_id)} id="btn-no">Não</button>
             
             </div>
           </li>
@@ -147,10 +167,29 @@ const ManagementPanel = () => {
           <li key={service.visitor_id} id='card'>
 
             <h3>Atendimento ativo</h3>
-            <p>Cliente: {service.name} - Mesa 5</p>
+            <p>Cliente: {service.name} - Mesa {service.table_id}</p>
             <div className='waiter-action-buttons'>
-              <button id='btn-end-service'>Finalizar Atendimento</button>
-              <button id='btn-change-table'>Atribuir Mesa</button>
+              <button id='btn-end-service' onClick={() => handleEndActiveService(service.visitor_id, service.socket_id)}>Finalizar Atendimento</button>
+              <button 
+                id='btn-change-table'
+                hidden={changeTable}
+                onClick={() => setChangeTable(!changeTable)}
+              >
+                Atribuir Mesa
+              </button>
+            </div>
+
+            <div className='waiter-manage-table-id'>
+              {changeTable && <form onSubmit={(e) => changeTableId(e, service.visitor_id)}> 
+                <input 
+                  name="table-id"
+                  type="number"
+                  min="0"
+                  max="100"
+                  onChange={(e) => setTableId(e.target.value)}
+                /> 
+                <button>Alterar Mesa</button> 
+              </form>}
             </div>
 
           </li>

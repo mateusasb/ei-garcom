@@ -29,7 +29,7 @@ function ToggleService() {
             const lastConnectedSession = localStorage.getItem('lastConnectedSession')
             if(socket.id && lastConnectedSession === null) {
                 setServiceStatus('requested');
-                socket.emit('new-service-request-customer', waiterSlug, {name: 'Mateus', socket_id: socket.id, visitor_id: getVisitorId()});
+                socket.emit('new-service-request-customer', waiterSlug, {name: 'Mateus', socket_id: socket.id, visitor_id: getVisitorId(), table_id: 0});
                 sessionStorage.setItem('serviceRequest', socket.id)
             }
         });
@@ -49,6 +49,7 @@ function ToggleService() {
 
         socket.on('service-refused-customer', () => {
             setServiceStatus('idle');
+            localStorage.removeItem('lastConnectedSession');
             socket.disconnect();
         });
 
