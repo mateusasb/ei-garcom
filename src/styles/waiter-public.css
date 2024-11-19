@@ -65,3 +65,33 @@
     color: #fff;
     transition: background-color 0.5s ease, transform 0.3s ease;
 }
+
+.customer-name-selection {
+    background-color: white;
+    display: grid;
+    grid-template-columns: min-content;
+    margin: 12px;
+    padding: 25px;
+    border-radius: 5px;
+}
+
+.customer-name-selection label {
+    margin: 15px 0px;
+    text-wrap: nowrap;
+    font-weight: 600;
+}
+
+.customer-name-selection input {
+    margin: 10px 0px 15px 0px;
+    padding-left: 10px;
+    width:92%;
+    height: 30px;
+    border-radius: 5px;
+    border-color: rgb(188, 188, 188);
+}
+
+.customer-name-selection button {
+    width:100%;
+    color: white;
+    background-color: #3b8d5d;
+}

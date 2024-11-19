@@ -7,10 +7,14 @@ import { getVisitorId } from '../../services/controller/visitorController';
 function ToggleService() {
     const { waiterSlug } = useParams();
     const [serviceStatus, setServiceStatus] = useState('idle');
+    const [loading, setLoading] = useState(false);
+    const [customerName, setCustomerName] = useState('');
+    const [popup, setPopup] = useState(false);
 
     useLayoutEffect(() => {
         const lastConnectedSession = localStorage.getItem('lastConnectedSession')
         const lastRequestedService = sessionStorage.getItem('serviceRequest')
+        const lastCustomerName = sessionStorage.getItem('customerName')
 
         if(lastRequestedService) {
             socket.connect()
@@ -22,14 +26,24 @@ function ToggleService() {
             setServiceStatus('initiated')
         }
 
+        if(!lastCustomerName) {
+            setPopup(true)
+            return
+        }
+
+        if(lastCustomerName) {
+            setCustomerName(lastCustomerName)
+        }
+
     }, [waiterSlug])
 
     useEffect(() => {
         socket.on('connect', () => {
             const lastConnectedSession = localStorage.getItem('lastConnectedSession')
             if(socket.id && lastConnectedSession === null) {
+                setLoading(true)
                 setServiceStatus('requested');
-                socket.emit('new-service-request-customer', waiterSlug, {name: 'Mateus', socket_id: socket.id, visitor_id: getVisitorId(), table_id: 0});
+                socket.emit('new-service-request-customer', waiterSlug, {name: customerName, socket_id: socket.id, visitor_id: getVisitorId(), table_id: 0});
                 sessionStorage.setItem('serviceRequest', socket.id)
             }
         });
@@ -38,6 +52,7 @@ function ToggleService() {
             //console.log(reason)
             //console.log(socket)
             sessionStorage.removeItem('serviceRequest')
+            setLoading(false)
         });
 
         socket.on('service-start-customer', (waiterId) => {
@@ -45,6 +60,7 @@ function ToggleService() {
             socket.emit('customer-initiate-session', waiterId);
             localStorage.setItem('lastConnectedSession', socket.id);
             sessionStorage.removeItem('serviceRequest');
+            setLoading(false);
         });
 
         socket.on('service-refused-customer', () => {
@@ -59,7 +75,7 @@ function ToggleService() {
             socket.off('service-refused-customer');
           };
 
-    }, [waiterSlug])
+    }, [waiterSlug, customerName])
 
     useEffect(() => {
         if (serviceStatus !== 'requested') {
@@ -96,6 +112,14 @@ function ToggleService() {
         socket.emit('customer-call', waiterSlug);
     };
 
+    function handleSetCustomerName(e) {
+        e.preventDefault();
+
+        console.log(customerName)
+        sessionStorage.setItem('customerName', customerName);
+        setPopup(false);
+    }
+
     return (
         <>
             <button
@@ -112,6 +136,24 @@ function ToggleService() {
                 >
                 {serviceStatus === 'idle' || serviceStatus === 'requested' ? 'Iniciar Atendimento' : 'Encerrar Atendimento'}
             </button>
+
+            {popup && <div className='popup-overlay'>
+                <div className='customer-name-selection'>
+                    <form onSubmit={handleSetCustomerName}>
+                        <label>Como deseja ser chamado(a)?</label>
+                        <input 
+                            name='name' 
+                            type='text' 
+                            id='name'
+                            value={customerName}
+                            onChange={(e) => setCustomerName(e.target.value)}
+                        />
+                        <button>Confirmar</button>
+                    </form>
+                </div>
+            </div>}
+
+            {loading && <div className="loader-container"><div className="loader"/></div>}
         </>
     )
 }
