@@ -1,3 +1,4 @@
+// REQUESTED SERVICES
 export const getCurrentRequests = () => {
     const requestsArray = localStorage.getItem('pendingServiceRequests')
     if(!requestsArray) {
@@ -14,10 +15,10 @@ export function saveServiceRequests(prevRequests, currentRequest) {
     
     const reqAlreadyExists = prevRequests.findIndex((req) => req.visitor_id  === currentRequest.visitor_id)
     if(reqAlreadyExists === -1) {
-        return setRequestsItem([...prevRequests, currentRequest]);
+        return storageServiceRequests([...prevRequests, currentRequest]);
       } else {
         prevRequests[reqAlreadyExists].socket_id = currentRequest.socket_id
-        return setRequestsItem(prevRequests);
+        return storageServiceRequests(prevRequests);
       }
 };
 
@@ -31,15 +32,14 @@ export function removeServiceRequests(prevRequests, visitorId, setActive) {
         removeActiveServices(visitorId)
     }
 
-    return setRequestsItem(updatedRequests)
+    return storageServiceRequests(updatedRequests)
 };
 
-function setRequestsItem(requests) {
+function storageServiceRequests(requests) {
     return localStorage.setItem('pendingServiceRequests', JSON.stringify(requests))
 };
 
-
-// 
+// ACTIVE SERVICES
 export const getActiveServices = () => {
     const servicesArray = localStorage.getItem('currentActiveServices');
 
@@ -60,16 +60,30 @@ function saveActiveServices(newService) {
         activeServices.push(newService);
     }
 
-    setActiveServices(activeServices);
+    storageActiveServices(activeServices);
 };
 
-function removeActiveServices(visitorId) {
-    const activeServices = getActiveServices()
-    const updatedServices = activeServices.filter((serv) => serv.visitor_id !== visitorId)
-
-    setActiveServices(updatedServices);
+export function removeActiveServices(visitorId) {
+    const activeServices = getActiveServices();
+    const updatedServices = activeServices.filter((serv) => serv.visitor_id !== visitorId);
+    
+    storageActiveServices(updatedServices);
+    return updatedServices; 
 }
 
-function setActiveServices(newService) {
+export function updateActiveService(updatedService) {
+    const activeServices = getActiveServices();
+    const serviceIndex = activeServices.findIndex((serv) => serv.visitor_id === updatedService.visitor_id)
+
+    if (serviceIndex !== -1) {
+        activeServices[serviceIndex] = updatedService
+    }
+
+    storageActiveServices(activeServices);
+    return activeServices;
+
+}
+
+function storageActiveServices(newService) {
     return localStorage.setItem('currentActiveServices', JSON.stringify(newService))
 };
