@@ -83,7 +83,7 @@ function ToggleService({ reviewState }) {
             socket.off('proceed-to-review-customer');
           };
 
-    }, [waiterSlug, customerName]) // eslint-disable-line
+    }, [waiterSlug, customerName]) // eslint-disable-line 
 
     useEffect(() => {
         if (serviceStatus !== 'requested') {
