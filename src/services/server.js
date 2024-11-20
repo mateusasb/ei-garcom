@@ -35,15 +35,19 @@ io.on("connection", (socket) => {
     });
 
     socket.on('service-start-waiter', (waiterId, customerSocket) => {
-        socket.to(customerSocket).emit('service-start-customer', waiterId)
+        socket.to(customerSocket).emit('service-start-customer', waiterId);
     });
 
     socket.on('service-refused-waiter', (customerSocket) => {
-        socket.to(customerSocket).emit('service-refused-customer')
+        socket.to(customerSocket).emit('service-refused-customer');
     });
 
     socket.on('service-request-expired-customer', (waiterId, visitorId) => {
-        socket.to(waiterId).emit('service-request-expired-waiter', visitorId)
+        socket.to(waiterId).emit('service-request-expired-waiter', visitorId);
+    })
+
+    socket.on('proceed-to-review', (customerSocket) => {
+        socket.to(customerSocket).emit('proceed-to-review-customer');
     })
 
 });

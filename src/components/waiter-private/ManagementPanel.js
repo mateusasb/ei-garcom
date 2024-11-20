@@ -91,6 +91,7 @@ const ManagementPanel = () => {
   function handleEndActiveService(visitorId, socketId) {
     removeActiveServices(visitorId);
     setServices(getActiveServices());
+    socket.emit('proceed-to-review', socketId);
     socket.emit('service-refused-waiter', socketId);
   }
 

@@ -4,7 +4,7 @@ import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { socket } from '../../socket'
 import { getVisitorId } from '../../services/controller/visitorController';
 
-function ToggleService() {
+function ToggleService({ reviewState }) {
     const { waiterSlug } = useParams();
     const [serviceStatus, setServiceStatus] = useState('idle');
     const [loading, setLoading] = useState(false);
@@ -35,7 +35,7 @@ function ToggleService() {
             setCustomerName(lastCustomerName)
         }
 
-    }, [waiterSlug])
+    }, [waiterSlug, serviceStatus])
 
     useEffect(() => {
         socket.on('connect', () => {
@@ -69,13 +69,21 @@ function ToggleService() {
             socket.disconnect();
         });
 
+        socket.on('proceed-to-review-customer', () => {
+            console.log('Proceed to Review');
+            reviewState(true);
+            localStorage.removeItem('lastConnectedSession');
+            socket.disconnect();
+          });
+
         return () => {
             socket.off('connect');
             socket.off('service-start-customer');
             socket.off('service-refused-customer');
+            socket.off('proceed-to-review-customer');
           };
 
-    }, [waiterSlug, customerName])
+    }, [waiterSlug, customerName]) // eslint-disable-line
 
     useEffect(() => {
         if (serviceStatus !== 'requested') {
@@ -99,10 +107,12 @@ function ToggleService() {
 
     function serviceToggle() {
         if (serviceStatus === 'initiated') {
-            socket.emit('service-request-expired-customer', waiterSlug, getVisitorId());
-            socket.disconnect();
             setServiceStatus('idle');
-            localStorage.removeItem('lastConnectedSession')
+            reviewState(true);
+            socket.emit('service-request-expired-customer', waiterSlug, getVisitorId());
+            localStorage.removeItem('lastConnectedSession');
+            socket.disconnect();
+
         } else {
             socket.connect();
         }

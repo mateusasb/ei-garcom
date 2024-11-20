@@ -27,7 +27,7 @@ const WaiterPublicPage = () => {
 
   const waiter = new User(waiterInfo)
   return (
-    <>
+    <div>
       {/* Componente do perfil do garçom na versão pública */}
       <WaiterPublicInterface 
         waiterData = {{
@@ -38,7 +38,7 @@ const WaiterPublicPage = () => {
           waiter_pic_url: waiter.profilePictureUrl
         }}
       />
-    </>
+    </div>
   );
   
 };

@@ -99,7 +99,7 @@ footer {
   
   .loader {
     border: 8px solid #f3f3f3; /* Cor de fundo */
-    border-top: 8px solid #3498db; /* Cor do spinner */
+    border-top: 8px solid #ffcc00; /* Cor do spinner */
     border-radius: 50%;
     width: 60px;
     height: 60px;
