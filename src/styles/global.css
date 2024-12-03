@@ -71,6 +71,19 @@ footer {
     width: 85%; 
 }
 
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5); /* Fundo escuro com opacidade */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
 .loader-container {
     position: fixed;
     top: 0;
@@ -86,7 +99,7 @@ footer {
   
   .loader {
     border: 8px solid #f3f3f3; /* Cor de fundo */
-    border-top: 8px solid #3498db; /* Cor do spinner */
+    border-top: 8px solid #ffcc00; /* Cor do spinner */
     border-radius: 50%;
     width: 60px;
     height: 60px;

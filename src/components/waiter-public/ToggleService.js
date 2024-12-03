@@ -4,13 +4,17 @@ import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { socket } from '../../socket'
 import { getVisitorId } from '../../services/controller/visitorController';
 
-function ToggleService() {
+function ToggleService({ reviewState }) {
     const { waiterSlug } = useParams();
     const [serviceStatus, setServiceStatus] = useState('idle');
+    const [loading, setLoading] = useState(false);
+    const [customerName, setCustomerName] = useState('');
+    const [popup, setPopup] = useState(false);
 
     useLayoutEffect(() => {
         const lastConnectedSession = localStorage.getItem('lastConnectedSession')
         const lastRequestedService = sessionStorage.getItem('serviceRequest')
+        const lastCustomerName = sessionStorage.getItem('customerName')
 
         if(lastRequestedService) {
             socket.connect()
@@ -22,14 +26,24 @@ function ToggleService() {
             setServiceStatus('initiated')
         }
 
-    }, [waiterSlug])
+        if(!lastCustomerName) {
+            setPopup(true)
+            return
+        }
+
+        if(lastCustomerName) {
+            setCustomerName(lastCustomerName)
+        }
+
+    }, [waiterSlug, serviceStatus])
 
     useEffect(() => {
         socket.on('connect', () => {
             const lastConnectedSession = localStorage.getItem('lastConnectedSession')
             if(socket.id && lastConnectedSession === null) {
+                setLoading(true)
                 setServiceStatus('requested');
-                socket.emit('new-service-request-customer', waiterSlug, {name: 'Mateus', socket_id: socket.id, visitor_id: getVisitorId(), table_id: 0});
+                socket.emit('new-service-request-customer', waiterSlug, {name: customerName, socket_id: socket.id, visitor_id: getVisitorId(), table_id: 0});
                 sessionStorage.setItem('serviceRequest', socket.id)
             }
         });
@@ -38,6 +52,7 @@ function ToggleService() {
             //console.log(reason)
             //console.log(socket)
             sessionStorage.removeItem('serviceRequest')
+            setLoading(false)
         });
 
         socket.on('service-start-customer', (waiterId) => {
@@ -45,6 +60,7 @@ function ToggleService() {
             socket.emit('customer-initiate-session', waiterId);
             localStorage.setItem('lastConnectedSession', socket.id);
             sessionStorage.removeItem('serviceRequest');
+            setLoading(false);
         });
 
         socket.on('service-refused-customer', () => {
@@ -53,13 +69,21 @@ function ToggleService() {
             socket.disconnect();
         });
 
+        socket.on('proceed-to-review-customer', () => {
+            console.log('Proceed to Review');
+            reviewState(true);
+            localStorage.removeItem('lastConnectedSession');
+            socket.disconnect();
+          });
+
         return () => {
             socket.off('connect');
             socket.off('service-start-customer');
             socket.off('service-refused-customer');
+            socket.off('proceed-to-review-customer');
           };
 
-    }, [waiterSlug])
+    }, [waiterSlug, customerName]) // eslint-disable-line 
 
     useEffect(() => {
         if (serviceStatus !== 'requested') {
@@ -83,10 +107,12 @@ function ToggleService() {
 
     function serviceToggle() {
         if (serviceStatus === 'initiated') {
-            socket.emit('service-request-expired-customer', waiterSlug, getVisitorId());
-            socket.disconnect();
             setServiceStatus('idle');
-            localStorage.removeItem('lastConnectedSession')
+            reviewState(true);
+            socket.emit('service-request-expired-customer', waiterSlug, getVisitorId());
+            localStorage.removeItem('lastConnectedSession');
+            socket.disconnect();
+
         } else {
             socket.connect();
         }
@@ -95,6 +121,14 @@ function ToggleService() {
     function callWaiter() {
         socket.emit('customer-call', waiterSlug);
     };
+
+    function handleSetCustomerName(e) {
+        e.preventDefault();
+
+        console.log(customerName)
+        sessionStorage.setItem('customerName', customerName);
+        setPopup(false);
+    }
 
     return (
         <>
@@ -112,6 +146,24 @@ function ToggleService() {
                 >
                 {serviceStatus === 'idle' || serviceStatus === 'requested' ? 'Iniciar Atendimento' : 'Encerrar Atendimento'}
             </button>
+
+            {popup && <div className='popup-overlay'>
+                <div className='customer-name-selection'>
+                    <form onSubmit={handleSetCustomerName}>
+                        <label>Como deseja ser chamado(a)?</label>
+                        <input 
+                            name='name' 
+                            type='text' 
+                            id='name'
+                            value={customerName}
+                            onChange={(e) => setCustomerName(e.target.value)}
+                        />
+                        <button>Confirmar</button>
+                    </form>
+                </div>
+            </div>}
+
+            {loading && <div className="loader-container"><div className="loader"/></div>}
         </>
     )
 }
