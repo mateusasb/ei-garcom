@@ -4,7 +4,7 @@ import WaiterPublicInfo from './WaiterPublicInfo';
 import CustomerReview from './CustomerReview';
 import { getVisitorId } from '../../services/controller/visitorController';
 import { socket } from '../../socket';
-import '../../styles/waiter-public.css'
+import '../../styles/waiter-public.css';
 
 const WaiterPublicInterface = (waiter) => {
   const [startReview, setStartReview] = useState(false)

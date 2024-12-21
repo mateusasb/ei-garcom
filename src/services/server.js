@@ -1,4 +1,6 @@
-const io = require('socket.io')(5000, {
+
+const PORT = 8080
+const io = require('socket.io')(PORT, {
     cors: {
         origin: ["http://localhost:3000"]
     }
@@ -60,4 +62,4 @@ io.of("/").adapter.on("leave-room", (room, id) => {
     console.log(`Socket ${id} saiu da sala ${room}`);
 });
 
-console.log('Servidor rodando e escutando na porta 5000');
+console.log('Servidor rodando e escutando na porta', PORT);
