@@ -69,7 +69,7 @@ ul {
     display: flex;
     align-items: center;
     gap: 10px; /* Espaçamento horizontal entre input e botão */
-    margin: 10px ; /* Espaçamento acima e abaixo do formulário */
+    margin: 4px ; /* Espaçamento acima e abaixo do formulário */
     width: auto;
 }
 
